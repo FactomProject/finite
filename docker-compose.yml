@@ -1,0 +1,54 @@
+version: "3.7"
+services:
+  finite:
+    container_name: finite
+    build: .
+    image: factomproject/finite:localdev
+    depends_on:
+      - pgsql
+    ports:
+      - "50051:50051"
+    environment:
+      PGUSER: pflow
+      PGPASSWORD: pflow
+      PGDATABASE: pflow
+      PGHOST: pgsql
+    networks:
+      ptnet: {}
+  pgsql:
+    container_name: pgsql
+    image: postgres:11.1
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: pflow
+      POSTGRES_PASSWORD: pflow
+      POSTGRES_DB: pflow
+    volumes: []
+    #- ./postgres-data:/var/lib/postgresql/data
+    networks:
+      ptnet: {}
+  factomd:
+    container_name: factomd
+    image: factomproject/factomd:localdev
+    expose:
+      - "8088"
+      - "8110"
+      - "8090"
+      - "9876"
+    ports:
+      - "8088:8088"
+      - "8110:8110"
+      - "8090:8090"
+      - "9876:9876"
+    volumes: []
+    #- ./factom-data:/root/.factom/:rw
+    command: -network=LOCAL
+    networks:
+      ptnet: {}
+networks:
+    ptnet:
+      ipam:
+        driver: default
+        config:
+          - subnet: 10.8.0.0/16
