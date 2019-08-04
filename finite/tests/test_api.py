@@ -15,7 +15,8 @@ class TestCase(unittest.TestCase):
     def test_grpc_api(self):
         stub = TestClient()
         response = stub.Status(event_pb2.Ping(nonce="foobar"))
-        print("Status: \n  nonce:%s \n  code:%i" % (response.nonce, response.code))
+        print("Status: \n  nonce:%s \n  code:%i" %
+              (response.nonce, response.code))
 
         query = event_pb2.MachineQuery()
         response = stub.ListMachines(query)
@@ -25,9 +26,16 @@ class TestCase(unittest.TestCase):
         response = stub.GetMachine(query)
         print("GetMachine: %s" % response.schema)
 
-        cmd = event_pb2.Command(id="bar", schema="baz", action=["act0"], multiple=1, payload=None, state=[])
+        cmd = event_pb2.Command(
+            id="bar",
+            schema="baz",
+            action=["act0"],
+            multiple=1,
+            payload=None,
+            state=[])
         response = stub.Dispatch(cmd)
-        print("Dispatch: \n  message: %s \n  code: %s" % (response.message, response.code))
+        print("Dispatch: \n  message: %s \n  code: %s" %
+              (response.message, response.code))
 
         query = event_pb2.Query(schema="foo", id="bar", uuid="baz")
         response = stub.GetEvent(query)
@@ -36,6 +44,7 @@ class TestCase(unittest.TestCase):
         query = event_pb2.Query(schema="foo", id="bar", uuid="baz")
         response = stub.GetState(query)
         print("GetState: %s" % response.list)
+
 
 if __name__ == '__main__':
     unittest.main()

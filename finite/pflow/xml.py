@@ -1,8 +1,12 @@
-import os, sys, imp
+import os
+import sys
+import imp
 import xml.etree.ElementTree as ET
+
 
 class InvalidFormat(Exception):
     pass
+
 
 class PFlowParser(object):
 
@@ -47,35 +51,38 @@ class PFlowParser(object):
         for r in self.root.findall('roles'):
             rl = rl + r.findall('role')
 
-        return [ self._el_to_dict(el) for el in rl ]
+        return [self._el_to_dict(el) for el in rl]
 
     def _arcs(self):
         ar = []
         for n in self.nets:
             ar = ar + n.findall('arc')
 
-        return [ self._el_to_dict(el) for el in ar ]
+        return [self._el_to_dict(el) for el in ar]
 
     def _places(self):
         pl = []
         for n in self.nets:
             pl = pl + n.findall('place')
 
-        return sorted([ self._el_to_dict(el) for el in pl ], key=lambda x: x['id'])
+        return sorted([self._el_to_dict(el)
+                       for el in pl], key=lambda x: x['id'])
 
     def _ref_places(self):
         rp = []
         for n in self.nets:
             rp = rp + n.findall('referencePlace')
 
-        return [ self._el_to_dict(el) for el in rp ]
+        return [self._el_to_dict(el) for el in rp]
 
     def _transitions(self):
         tx = []
         for n in self.nets:
             tx = tx + n.findall('transition')
 
-        return sorted([ self._el_to_dict(el) for el in tx ], key=lambda x: x['id'])
+        return sorted([self._el_to_dict(el)
+                       for el in tx], key=lambda x: x['id'])
+
 
 class PFlowNet(PFlowParser):
 
@@ -89,7 +96,8 @@ class PFlowNet(PFlowParser):
 
     def _reindex(self, pflow):
         # REVIEW: isStatic attribute indicates that a place is shared
-        # between subnets - though in the VASS form this is the default behavior
+        # between subnets - though in the VASS form this is the default
+        # behavior
 
         i = 0
         self.place_ids = {}
@@ -101,12 +109,13 @@ class PFlowNet(PFlowParser):
 
             # capacity tag unsupported by pneditor.org
             # latest/0.71 version of pflow
-            # though this can be added manually to the file after initial design using GUI
+            # though this can be added manually to the file after initial
+            # design using GUI
             self.place_labels.append(p['label'])
             if 'capacity' in p:
                 cap = p['capacity']
             else:
-                cap = 0 
+                cap = 0
 
             self.places[p['label']] = {
                 "offset": i,
@@ -114,7 +123,7 @@ class PFlowNet(PFlowParser):
                 "initial": p['tokens']
             }
 
-            i+=1
+            i += 1
 
         self.ref_places = {}
         for rp in pflow['ref_places']:
@@ -135,7 +144,6 @@ class PFlowNet(PFlowParser):
             for t in r['transitionId']:
                 key = self.transition_ids[t]
                 self.transitions[key]['role'] = r['name']
-
 
         for a in pflow['arcs']:
             p = None
@@ -161,7 +169,7 @@ class PFlowNet(PFlowParser):
 
             pl = self.places[self.place_labels[p]]
             tx = self.transitions[t]
-                
+
             if a['type'] == 'inhibitor':
                 g = self.empty_vector()
                 g[pl['offset']] = unit
@@ -172,6 +180,8 @@ class PFlowNet(PFlowParser):
                 assert False
 
 # REVIEW: consider relocating
+
+
 class StateMachine(object):
 
     storage_provider = None
@@ -213,15 +223,15 @@ class StateMachine(object):
         out += "    transitions = {\n"
         for t, attrib in self.transitions.items():
             out += \
-            "        '%s': {\n" % t + \
-            "            'delta': %s,\n" % attrib['delta'] + \
-            "            'role': '%s',\n" % attrib  ['role']
+                "        '%s': {\n" % t + \
+                "            'delta': %s,\n" % attrib['delta'] + \
+                "            'role': '%s',\n" % attrib['role']
 
             if len(attrib['guards']) > 0:
                 for l, g in attrib['guards'].items():
                     out += \
-                    "            'guards': {\n" + \
-                    "                '%s': %s,\n" % (l, g)
+                        "            'guards': {\n" + \
+                        "                '%s': %s,\n" % (l, g)
                 out += "            }\n"
             else:
                 out += "            'guards': {},\n" \

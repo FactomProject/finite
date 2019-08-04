@@ -1,10 +1,10 @@
 ### Work-in-progress
 
-Construct evenstore using proto3 scaffolding
+Construct eventstore using proto3 scaffolding
 
 WIP
 ---
-- [ ] fix failing tests
+- [ ] code factomd-only storage w/ https://pypi.org/project/factom-api/
 
 BACKLOG
 -------
@@ -12,8 +12,8 @@ BACKLOG
 - [ ] support compound actions as in ptnet-eventstore repo
 - [ ] use Factom Blockchain as storage provider
 - [ ] derive chain ID/external refs from UUIDs
-- [ ] test 0FCT->EC ratio - assume private factom used as localdb
 - [ ] figure out how to avoid hacking the python path to load pb modules
+- [ ] evaluate all pflow files in ./examples some may not be parsed properly
 
 DONE
 ------
@@ -21,10 +21,7 @@ DONE
 
 ICEBOX
 ------
-- [ ] CLOUD: use bigtable as storage
-- [ ] CLOUD: support broadcast to pubsub
 - [ ] prototype matching WASM interface to replicate .proto state machines 
 - [ ] integrate harmony-identity service
 - [ ] use DIDs/VC to control roles/permissions
-- [ ] https://github.com/grpc-ecosystem/grpc-gateway
-- [ ] pgsql+mongo: use https://github.com/EnterpriseDB/mongo_fdw to mix pgsql driver w/ direct access to blockchain DB
+- [ ] add recuring check to fund EC address

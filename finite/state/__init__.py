@@ -1,11 +1,14 @@
 class InvalidOutput(Exception):
     pass
 
+
 class InvalidInput(Exception):
     pass
 
+
 class GuardFail(Exception):
     pass
+
 
 class StateMachine(object):
 
@@ -31,7 +34,7 @@ class StateMachine(object):
 
     def inital_vector(self):
         """ bulid the default state """
-        return [ p["initial"] for _, p in self.places.items() ]
+        return [p["initial"] for _, p in self.places.items()]
 
     def transform(self, state, action, multiple=1):
         """ perform state transformation with vector addition """
@@ -50,7 +53,7 @@ class StateMachine(object):
         out = []
         for p, attr in self.places.items():
             i = attr['offset']
-            n = state[i] + t['delta'][i]*multiple 
+            n = state[i] + t['delta'][i] * multiple
 
             if n < 0:
                 raise InvalidOutput("underflow state[%i] %s => %i" % (i, p, n))

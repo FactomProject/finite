@@ -107,3 +107,4 @@ venv.bak/
 cockroach-data
 postgres-data
 .factom
+.vscode

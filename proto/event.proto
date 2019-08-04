@@ -47,22 +47,28 @@ message StateList {
   repeated State list = 1;
 }
 
+message Action {
+  string action = 1;
+  uint64 multiple = 2;
+}
+
 message Command {
   string id = 1;
   string schema = 2;
-  repeated string action = 3; // array-of-actions n > 1 represent 'compound commands'
-  uint64 multiple = 4;
-  bytes payload = 5;
+  string chain = 3;
+  repeated Action action = 4;
+  uint64 multiple = 5;
   repeated uint64 state = 6;
 }
 
 message State {
   string id = 1;
   string schema = 2;
-  repeated uint64 state = 3;
-  string head = 4;
-  google.protobuf.Timestamp created = 5;
-  google.protobuf.Timestamp updated = 6;
+  string chain = 3;
+  repeated uint64 state = 4;
+  string head = 5;
+  google.protobuf.Timestamp created = 6;
+  google.protobuf.Timestamp updated = 7;
 }
 
 message EventStatus {
@@ -74,8 +80,8 @@ message EventStatus {
 message Event {
   string id = 1;
   string schema = 2;
-  string action = 3;
-  uint64 multiple = 4;
+  string chain = 3;
+  repeated Action action = 4;
   google.protobuf.Any payload = 5;
   repeated uint64 state = 6;
   google.protobuf.Timestamp ts = 7;

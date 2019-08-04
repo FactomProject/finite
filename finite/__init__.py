@@ -5,6 +5,7 @@ import finite.pflow as pflow_loader
 EVENTSTORE = {}
 """ loaded eventstore objects indexed by schema """
 
+
 def initialize(provider, **kwargs):
     """ reload eventstorage instances """
 
@@ -12,20 +13,24 @@ def initialize(provider, **kwargs):
     provider.reconnect(**kwargs)
     provider.migrate()
 
-    if not 'dirname' in kwargs:
+    if 'dirname' not in kwargs:
         kwargs['dirname'] = os.environ.get(
             'PTFLOW_DIR',
             os.path.dirname(os.path.abspath(__file__)) + "/examples/"
         )
 
-    for pf in  glob.glob(kwargs['dirname'] + "*.pflow"):
+    for pf in glob.glob(kwargs['dirname'] + "*.pflow"):
         es, _ = pflow_loader.load_file(pf)
+        # load definition as a python class
         EVENTSTORE[es.name] = es.to_module().Machine
 
-def eventstore(schema=None, oid=None):
+
+def eventstore(**kwargs):
     """ get statemachine eventstore by schema name """
-    return EVENTSTORE[schema](oid, schema)
+    assert 'schema' in kwargs
+    return EVENTSTORE[kwargs['schema']](**kwargs)
+
 
 def schemata():
     """ list names of state machines """
-    return [ k for k in EVENTSTORE ]
+    return [k for k in EVENTSTORE]

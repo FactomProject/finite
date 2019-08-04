@@ -1,16 +1,6 @@
 import json
 import uuid
-from factom import Factomd, FactomWalletd
-
-factomd = Factomd(
-    host='http://factomd:8088',
-    fct_address='FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q',
-    ec_address='EC2jhmCtabeTXGtuLi3AaPzvwSuqksdVsjfxXMXV5gPmipXc4GjC'
-    # username='rpc_username',
-    # password='rpc_password'
-)
-
-walletd = FactomWalletd()
+from finite.storage.dict import keyval as kv
 
 
 class Unimplemented(Exception):
@@ -31,9 +21,12 @@ DEFAULT_SCHEMA = 'base'
 """ event schema to use if not provided """
 
 
+""" python dict use to emulate database storage """
+
+
 class Storage(object):
 
-    SOURCE_HEADER = "from finite.storage.factom import Storage"
+    SOURCE_HEADER = "from finite.storage.dict import Storage"
     """ import line used to include this class in generated code """
 
     EVENT = "_EVENT"
@@ -45,6 +38,7 @@ class Storage(object):
     @staticmethod
     def reconnect(**kwargs):
         """ create connection pool """
+        print(kwargs)
 
     @staticmethod
     def drop():
@@ -56,8 +50,9 @@ class Storage(object):
 
     def __init__(self, **kwargs):
         """ set object uuid for storage instance """
-        # REVIEW: should chain be static?
-        print(kwargs)
+        self.schema = kwargs['schema']
+        self.oid = str(uuid.uuid4())
+        self.chain = str(uuid.uuid4())  # FIXME should create a proper chain ID
 
     def __call__(self, action, **kwargs):
         """ append a new event """
@@ -86,17 +81,13 @@ class Storage(object):
 
             def _txn():
 
-                # TODO access datastore
-                #cur.execute(sql.get_state, (self.oid, self.schema))
-
-                # FIXME
-                #previous = cur.fetchone()
-                raise Unimplemented("FIXME")
+                previous = kv.get_state(self.chain, self.schema, self.oid)
 
                 if not previous:
                     current_state = self.inital_vector()
                     parent = ROOT_UUID
                 else:
+                    # FIXME: update to map return values
                     current_state = previous[2]
                     parent = previous[3]
 
@@ -106,14 +97,17 @@ class Storage(object):
                 if role not in kwargs['roles'] and SUPERUSER not in kwargs['roles']:
                     raise RoleFail("Missing Required Role: " + role)
 
-                # TODO access datastore
-                # cur.execute(sql.set_state,
-                #    (self.oid, self.schema, new_state, event_id, new_state, event_id, self.schema, self.oid)
-                # )
+                kv.set_state(
+                    self.chain,
+                    self.schema,
+                    self.oid,
+                    event_id,
+                    new_state)
 
-                # cur.execute(sql.append_event,
-                #    (event_id, self.oid, self.schema, action, multiple, payload, new_state, parent)
-                # )
+                # FIXME actually support multiple actions
+                kv.append_event(
+                    self.chain, self.schema, self.oid, parent, event_id, [
+                        (action, multiple)], new_state, payload)
 
             _txn()
 
