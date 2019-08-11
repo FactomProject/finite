@@ -12,6 +12,3 @@ factom-api = "*"
 protobuf = "*"
 grpcio = "*"
 grpcio-tools = "*"
-
-[requires]
-python_version = "3.7"

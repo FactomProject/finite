@@ -1,16 +1,5 @@
 import json
-import uuid
-from factom import Factomd, FactomWalletd
-
-factomd = Factomd(
-    host='http://factomd:8088',
-    fct_address='FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q',
-    ec_address='EC2jhmCtabeTXGtuLi3AaPzvwSuqksdVsjfxXMXV5gPmipXc4GjC'
-    # username='rpc_username',
-    # password='rpc_password'
-)
-
-walletd = FactomWalletd()
+from finite.storage import new_uuid
 
 
 class Unimplemented(Exception):

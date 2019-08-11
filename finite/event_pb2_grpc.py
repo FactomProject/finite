@@ -29,6 +29,11 @@ class EventStoreStub(object):
         request_serializer=event__pb2.Query.SerializeToString,
         response_deserializer=event__pb2.Machine.FromString,
         )
+    self.GetPlaceMap = channel.unary_unary(
+        '/finite.EventStore/GetPlaceMap',
+        request_serializer=event__pb2.Query.SerializeToString,
+        response_deserializer=event__pb2.PlaceMap.FromString,
+        )
     self.Dispatch = channel.unary_unary(
         '/finite.EventStore/Dispatch',
         request_serializer=event__pb2.Command.SerializeToString,
@@ -65,6 +70,13 @@ class EventStoreServicer(object):
     raise NotImplementedError('Method not implemented!')
 
   def GetMachine(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetPlaceMap(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -109,6 +121,11 @@ def add_EventStoreServicer_to_server(servicer, server):
           servicer.GetMachine,
           request_deserializer=event__pb2.Query.FromString,
           response_serializer=event__pb2.Machine.SerializeToString,
+      ),
+      'GetPlaceMap': grpc.unary_unary_rpc_method_handler(
+          servicer.GetPlaceMap,
+          request_deserializer=event__pb2.Query.FromString,
+          response_serializer=event__pb2.PlaceMap.SerializeToString,
       ),
       'Dispatch': grpc.unary_unary_rpc_method_handler(
           servicer.Dispatch,

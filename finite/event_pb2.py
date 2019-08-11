@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='finite',
   syntax='proto3',
   serialized_options=_b('\n\037com.project.factom.finite.eventB\nEventProtoP\001'),
-  serialized_pb=_b('\n\x0b\x65vent.proto\x12\x06\x66inite\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/protobuf/any.proto\"\x1b\n\x0bJsonPayload\x12\x0c\n\x04json\x18\x01 \x01(\x0c\"\x0e\n\x0cMachineQuery\"\x15\n\x04Ping\x12\r\n\x05nonce\x18\x01 \x01(\t\"#\n\x04Pong\x12\r\n\x05nonce\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\x03\"1\n\x05Query\x12\x0e\n\x06schema\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\x12\x0c\n\x04uuid\x18\x03 \x01(\t\"(\n\tEventList\x12\x1b\n\x04list\x18\x01 \x03(\x0b\x32\r.finite.Event\"(\n\tStateList\x12\x1b\n\x04list\x18\x01 \x03(\x0b\x32\r.finite.State\"*\n\x06\x41\x63tion\x12\x0e\n\x06\x61\x63tion\x18\x01 \x01(\t\x12\x10\n\x08multiple\x18\x02 \x01(\x04\"u\n\x07\x43ommand\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\r\n\x05\x63hain\x18\x03 \x01(\t\x12\x1e\n\x06\x61\x63tion\x18\x04 \x03(\x0b\x32\x0e.finite.Action\x12\x10\n\x08multiple\x18\x05 \x01(\x04\x12\r\n\x05state\x18\x06 \x03(\x04\"\xa9\x01\n\x05State\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\r\n\x05\x63hain\x18\x03 \x01(\t\x12\r\n\x05state\x18\x04 \x03(\x04\x12\x0c\n\x04head\x18\x05 \x01(\t\x12+\n\x07\x63reated\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x07updated\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"J\n\x0b\x45ventStatus\x12\x1c\n\x05state\x18\x01 \x01(\x0b\x32\r.finite.State\x12\x0c\n\x04\x63ode\x18\x02 \x01(\x03\x12\x0f\n\x07message\x18\x03 \x01(\t\"\xce\x01\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\r\n\x05\x63hain\x18\x03 \x01(\t\x12\x1e\n\x06\x61\x63tion\x18\x04 \x03(\x0b\x32\x0e.finite.Action\x12%\n\x07payload\x18\x05 \x01(\x0b\x32\x14.google.protobuf.Any\x12\r\n\x05state\x18\x06 \x03(\x04\x12&\n\x02ts\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0c\n\x04uuid\x18\x08 \x01(\t\x12\x0e\n\x06parent\x18\t \x01(\t\"\x16\n\x05Guard\x12\r\n\x05\x64\x65lta\x18\x01 \x03(\x03\"\x97\x01\n\nTransition\x12\r\n\x05\x64\x65lta\x18\x01 \x03(\x03\x12\x0c\n\x04role\x18\x02 \x01(\t\x12.\n\x06guards\x18\x03 \x03(\x0b\x32\x1e.finite.Transition.GuardsEntry\x1a<\n\x0bGuardsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1c\n\x05value\x18\x02 \x01(\x0b\x32\r.finite.Guard:\x02\x38\x01\"\x1a\n\x08Schemata\x12\x0e\n\x06schema\x18\x01 \x03(\t\"\xbb\x01\n\x07Machine\x12\x0e\n\x06schema\x18\x01 \x01(\t\x12\x0f\n\x07initial\x18\x02 \x03(\x04\x12\x10\n\x08\x63\x61pacity\x18\x03 \x03(\x04\x12\x35\n\x0btransitions\x18\x04 \x03(\x0b\x32 .finite.Machine.TransitionsEntry\x1a\x46\n\x10TransitionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.finite.Transition:\x02\x38\x01\"\x1b\n\x0bMachineList\x12\x0c\n\x04list\x18\x01 \x03(\t2\xb5\x02\n\nEventStore\x12&\n\x06Status\x12\x0c.finite.Ping\x1a\x0c.finite.Pong\"\x00\x12;\n\x0cListMachines\x12\x14.finite.MachineQuery\x1a\x13.finite.MachineList\"\x00\x12.\n\nGetMachine\x12\r.finite.Query\x1a\x0f.finite.Machine\"\x00\x12\x32\n\x08\x44ispatch\x12\x0f.finite.Command\x1a\x13.finite.EventStatus\"\x00\x12.\n\x08GetEvent\x12\r.finite.Query\x1a\x11.finite.EventList\"\x00\x12.\n\x08GetState\x12\r.finite.Query\x1a\x11.finite.StateList\"\x00\x42/\n\x1f\x63om.project.factom.finite.eventB\nEventProtoP\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0b\x65vent.proto\x12\x06\x66inite\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19google/protobuf/any.proto\"\x1b\n\x0bJsonPayload\x12\x0c\n\x04json\x18\x01 \x01(\x0c\"\x0e\n\x0cMachineQuery\"\x15\n\x04Ping\x12\r\n\x05nonce\x18\x01 \x01(\t\"#\n\x04Pong\x12\r\n\x05nonce\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\x03\"1\n\x05Query\x12\x0e\n\x06schema\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\x12\x0c\n\x04uuid\x18\x03 \x01(\t\"(\n\tEventList\x12\x1b\n\x04list\x18\x01 \x03(\x0b\x32\r.finite.Event\"(\n\tStateList\x12\x1b\n\x04list\x18\x01 \x03(\x0b\x32\r.finite.State\"*\n\x06\x41\x63tion\x12\x0e\n\x06\x61\x63tion\x18\x01 \x01(\t\x12\x10\n\x08multiple\x18\x02 \x01(\x04\"u\n\x07\x43ommand\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\r\n\x05\x63hain\x18\x03 \x01(\t\x12\x1e\n\x06\x61\x63tion\x18\x04 \x03(\x0b\x32\x0e.finite.Action\x12\x10\n\x08multiple\x18\x05 \x01(\x04\x12\r\n\x05state\x18\x06 \x03(\x04\"\xa9\x01\n\x05State\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\r\n\x05\x63hain\x18\x03 \x01(\t\x12\r\n\x05state\x18\x04 \x03(\x04\x12\x0c\n\x04head\x18\x05 \x01(\t\x12+\n\x07\x63reated\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x07updated\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"J\n\x0b\x45ventStatus\x12\x1c\n\x05state\x18\x01 \x01(\x0b\x32\r.finite.State\x12\x0c\n\x04\x63ode\x18\x02 \x01(\x03\x12\x0f\n\x07message\x18\x03 \x01(\t\"\xce\x01\n\x05\x45vent\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06schema\x18\x02 \x01(\t\x12\r\n\x05\x63hain\x18\x03 \x01(\t\x12\x1e\n\x06\x61\x63tion\x18\x04 \x03(\x0b\x32\x0e.finite.Action\x12%\n\x07payload\x18\x05 \x01(\x0b\x32\x14.google.protobuf.Any\x12\r\n\x05state\x18\x06 \x03(\x04\x12&\n\x02ts\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0c\n\x04uuid\x18\x08 \x01(\t\x12\x0e\n\x06parent\x18\t \x01(\t\"\x16\n\x05Guard\x12\r\n\x05\x64\x65lta\x18\x01 \x03(\x03\"\x97\x01\n\nTransition\x12\r\n\x05\x64\x65lta\x18\x01 \x03(\x03\x12\x0c\n\x04role\x18\x02 \x01(\t\x12.\n\x06guards\x18\x03 \x03(\x0b\x32\x1e.finite.Transition.GuardsEntry\x1a<\n\x0bGuardsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1c\n\x05value\x18\x02 \x01(\x0b\x32\r.finite.Guard:\x02\x38\x01\"\x1a\n\x08Schemata\x12\x0e\n\x06schema\x18\x01 \x03(\t\":\n\x05Place\x12\x0e\n\x06offset\x18\x01 \x01(\x04\x12\x0f\n\x07initial\x18\x02 \x01(\x04\x12\x10\n\x08\x63\x61pacity\x18\x03 \x01(\x04\"}\n\x08PlaceMap\x12\x0e\n\x06schema\x18\x01 \x01(\t\x12&\n\x03map\x18\x02 \x03(\x0b\x32\x19.finite.PlaceMap.MapEntry\x1a\x39\n\x08MapEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1c\n\x05value\x18\x02 \x01(\x0b\x32\r.finite.Place:\x02\x38\x01\"\xbb\x01\n\x07Machine\x12\x0e\n\x06schema\x18\x01 \x01(\t\x12\x0f\n\x07initial\x18\x02 \x03(\x04\x12\x10\n\x08\x63\x61pacity\x18\x03 \x03(\x04\x12\x35\n\x0btransitions\x18\x04 \x03(\x0b\x32 .finite.Machine.TransitionsEntry\x1a\x46\n\x10TransitionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.finite.Transition:\x02\x38\x01\"\x1b\n\x0bMachineList\x12\x0c\n\x04list\x18\x01 \x03(\t2\xe7\x02\n\nEventStore\x12&\n\x06Status\x12\x0c.finite.Ping\x1a\x0c.finite.Pong\"\x00\x12;\n\x0cListMachines\x12\x14.finite.MachineQuery\x1a\x13.finite.MachineList\"\x00\x12.\n\nGetMachine\x12\r.finite.Query\x1a\x0f.finite.Machine\"\x00\x12\x30\n\x0bGetPlaceMap\x12\r.finite.Query\x1a\x10.finite.PlaceMap\"\x00\x12\x32\n\x08\x44ispatch\x12\x0f.finite.Command\x1a\x13.finite.EventStatus\"\x00\x12.\n\x08GetEvent\x12\r.finite.Query\x1a\x11.finite.EventList\"\x00\x12.\n\x08GetState\x12\r.finite.Query\x1a\x11.finite.StateList\"\x00\x42/\n\x1f\x63om.project.factom.finite.eventB\nEventProtoP\x01\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,google_dot_protobuf_dot_any__pb2.DESCRIPTOR,])
 
@@ -713,6 +713,126 @@ _SCHEMATA = _descriptor.Descriptor(
 )
 
 
+_PLACE = _descriptor.Descriptor(
+  name='Place',
+  full_name='finite.Place',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='offset', full_name='finite.Place.offset', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='initial', full_name='finite.Place.initial', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='capacity', full_name='finite.Place.capacity', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1149,
+  serialized_end=1207,
+)
+
+
+_PLACEMAP_MAPENTRY = _descriptor.Descriptor(
+  name='MapEntry',
+  full_name='finite.PlaceMap.MapEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='finite.PlaceMap.MapEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='finite.PlaceMap.MapEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=_b('8\001'),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1277,
+  serialized_end=1334,
+)
+
+_PLACEMAP = _descriptor.Descriptor(
+  name='PlaceMap',
+  full_name='finite.PlaceMap',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='schema', full_name='finite.PlaceMap.schema', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='map', full_name='finite.PlaceMap.map', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_PLACEMAP_MAPENTRY, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1209,
+  serialized_end=1334,
+)
+
+
 _MACHINE_TRANSITIONSENTRY = _descriptor.Descriptor(
   name='TransitionsEntry',
   full_name='finite.Machine.TransitionsEntry',
@@ -746,8 +866,8 @@ _MACHINE_TRANSITIONSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1267,
-  serialized_end=1337,
+  serialized_start=1454,
+  serialized_end=1524,
 )
 
 _MACHINE = _descriptor.Descriptor(
@@ -797,8 +917,8 @@ _MACHINE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1150,
-  serialized_end=1337,
+  serialized_start=1337,
+  serialized_end=1524,
 )
 
 
@@ -828,8 +948,8 @@ _MACHINELIST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1339,
-  serialized_end=1366,
+  serialized_start=1526,
+  serialized_end=1553,
 )
 
 _EVENTLIST.fields_by_name['list'].message_type = _EVENT
@@ -844,6 +964,9 @@ _EVENT.fields_by_name['ts'].message_type = google_dot_protobuf_dot_timestamp__pb
 _TRANSITION_GUARDSENTRY.fields_by_name['value'].message_type = _GUARD
 _TRANSITION_GUARDSENTRY.containing_type = _TRANSITION
 _TRANSITION.fields_by_name['guards'].message_type = _TRANSITION_GUARDSENTRY
+_PLACEMAP_MAPENTRY.fields_by_name['value'].message_type = _PLACE
+_PLACEMAP_MAPENTRY.containing_type = _PLACEMAP
+_PLACEMAP.fields_by_name['map'].message_type = _PLACEMAP_MAPENTRY
 _MACHINE_TRANSITIONSENTRY.fields_by_name['value'].message_type = _TRANSITION
 _MACHINE_TRANSITIONSENTRY.containing_type = _MACHINE
 _MACHINE.fields_by_name['transitions'].message_type = _MACHINE_TRANSITIONSENTRY
@@ -862,6 +985,8 @@ DESCRIPTOR.message_types_by_name['Event'] = _EVENT
 DESCRIPTOR.message_types_by_name['Guard'] = _GUARD
 DESCRIPTOR.message_types_by_name['Transition'] = _TRANSITION
 DESCRIPTOR.message_types_by_name['Schemata'] = _SCHEMATA
+DESCRIPTOR.message_types_by_name['Place'] = _PLACE
+DESCRIPTOR.message_types_by_name['PlaceMap'] = _PLACEMAP
 DESCRIPTOR.message_types_by_name['Machine'] = _MACHINE
 DESCRIPTOR.message_types_by_name['MachineList'] = _MACHINELIST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -979,6 +1104,28 @@ Schemata = _reflection.GeneratedProtocolMessageType('Schemata', (_message.Messag
   })
 _sym_db.RegisterMessage(Schemata)
 
+Place = _reflection.GeneratedProtocolMessageType('Place', (_message.Message,), {
+  'DESCRIPTOR' : _PLACE,
+  '__module__' : 'event_pb2'
+  # @@protoc_insertion_point(class_scope:finite.Place)
+  })
+_sym_db.RegisterMessage(Place)
+
+PlaceMap = _reflection.GeneratedProtocolMessageType('PlaceMap', (_message.Message,), {
+
+  'MapEntry' : _reflection.GeneratedProtocolMessageType('MapEntry', (_message.Message,), {
+    'DESCRIPTOR' : _PLACEMAP_MAPENTRY,
+    '__module__' : 'event_pb2'
+    # @@protoc_insertion_point(class_scope:finite.PlaceMap.MapEntry)
+    })
+  ,
+  'DESCRIPTOR' : _PLACEMAP,
+  '__module__' : 'event_pb2'
+  # @@protoc_insertion_point(class_scope:finite.PlaceMap)
+  })
+_sym_db.RegisterMessage(PlaceMap)
+_sym_db.RegisterMessage(PlaceMap.MapEntry)
+
 Machine = _reflection.GeneratedProtocolMessageType('Machine', (_message.Message,), {
 
   'TransitionsEntry' : _reflection.GeneratedProtocolMessageType('TransitionsEntry', (_message.Message,), {
@@ -1004,6 +1151,7 @@ _sym_db.RegisterMessage(MachineList)
 
 DESCRIPTOR._options = None
 _TRANSITION_GUARDSENTRY._options = None
+_PLACEMAP_MAPENTRY._options = None
 _MACHINE_TRANSITIONSENTRY._options = None
 
 _EVENTSTORE = _descriptor.ServiceDescriptor(
@@ -1012,8 +1160,8 @@ _EVENTSTORE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1369,
-  serialized_end=1678,
+  serialized_start=1556,
+  serialized_end=1915,
   methods=[
   _descriptor.MethodDescriptor(
     name='Status',
@@ -1043,9 +1191,18 @@ _EVENTSTORE = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
+    name='GetPlaceMap',
+    full_name='finite.EventStore.GetPlaceMap',
+    index=3,
+    containing_service=None,
+    input_type=_QUERY,
+    output_type=_PLACEMAP,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
     name='Dispatch',
     full_name='finite.EventStore.Dispatch',
-    index=3,
+    index=4,
     containing_service=None,
     input_type=_COMMAND,
     output_type=_EVENTSTATUS,
@@ -1054,7 +1211,7 @@ _EVENTSTORE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='GetEvent',
     full_name='finite.EventStore.GetEvent',
-    index=4,
+    index=5,
     containing_service=None,
     input_type=_QUERY,
     output_type=_EVENTLIST,
@@ -1063,7 +1220,7 @@ _EVENTSTORE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='GetState',
     full_name='finite.EventStore.GetState',
-    index=5,
+    index=6,
     containing_service=None,
     input_type=_QUERY,
     output_type=_STATELIST,

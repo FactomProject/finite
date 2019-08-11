@@ -13,6 +13,7 @@ service EventStore {
   rpc Status (Ping) returns (Pong) {}
   rpc ListMachines (MachineQuery) returns (MachineList) {}
   rpc GetMachine (Query) returns (Machine) {}
+  rpc GetPlaceMap (Query) returns (PlaceMap) {}
   rpc Dispatch (Command) returns (EventStatus) {}
   rpc GetEvent (Query) returns (EventList) {}
   rpc GetState (Query) returns (StateList) {}
@@ -101,6 +102,17 @@ message Transition {
 
 message Schemata {
   repeated string schema = 1;
+}
+
+message Place {
+  uint64 offset = 1;
+  uint64 initial = 2;
+  uint64 capacity = 3;
+}
+
+message PlaceMap {
+  string schema = 1;
+  map<string, Place> map = 2;
 }
 
 message Machine {

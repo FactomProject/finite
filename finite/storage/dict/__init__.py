@@ -1,27 +1,8 @@
 import json
-import uuid
+import finite.storage as stor
 from finite.storage.dict import keyval as kv
 
-
-class Unimplemented(Exception):
-    pass
-
-
-class RoleFail(Exception):
-    pass
-
-
-SUPERUSER = '*'
-""" role used to bypass all permission checks """
-
-ROOT_UUID = '00000000-0000-0000-0000-000000000000'
-""" parent UUID used to initialize a stream """
-
-DEFAULT_SCHEMA = 'base'
-""" event schema to use if not provided """
-
-
-""" python dict use to emulate database storage """
+new_uuid = stor.new_uuid
 
 
 class Storage(object):
@@ -38,7 +19,6 @@ class Storage(object):
     @staticmethod
     def reconnect(**kwargs):
         """ create connection pool """
-        print(kwargs)
 
     @staticmethod
     def drop():
@@ -51,14 +31,15 @@ class Storage(object):
     def __init__(self, **kwargs):
         """ set object uuid for storage instance """
         self.schema = kwargs['schema']
-        self.oid = str(uuid.uuid4())
-        self.chain = str(uuid.uuid4())  # FIXME should create a proper chain ID
+        self.oid = new_uuid()
+        self.chain = new_uuid()  # FIXME should create a proper chain ID
+        kv.initialize(self.chain, self.schema)
 
     def __call__(self, action, **kwargs):
         """ append a new event """
         # REVIEW: should chainid be a kwarg?
 
-        event_id = str(uuid.uuid4())
+        event_id = new_uuid()
         payload = None
         new_state = None
         err = None
@@ -79,37 +60,32 @@ class Storage(object):
                 # cannot be null
                 payload = "{}"
 
-            def _txn():
+            previous = kv.get_state(self.chain, self.schema, self.oid)
 
-                previous = kv.get_state(self.chain, self.schema, self.oid)
+            if not previous:
+                parent = stor.ROOT_UUID
+                current_state = self.inital_vector()
+            else:
+                parent = previous[0]
+                current_state = previous[1]
 
-                if not previous:
-                    current_state = self.inital_vector()
-                    parent = ROOT_UUID
-                else:
-                    # FIXME: update to map return values
-                    current_state = previous[2]
-                    parent = previous[3]
+            # FIXME support multiple actions
+            new_state, role = self.transform(current_state, action, multiple)
 
-                new_state, role = self.transform(
-                    current_state, action, multiple)
+            if role not in kwargs['roles'] and stor.SUPERUSER not in kwargs['roles']:
+                raise stor.RoleFail("Missing Required Role: " + role)
 
-                if role not in kwargs['roles'] and SUPERUSER not in kwargs['roles']:
-                    raise RoleFail("Missing Required Role: " + role)
+            kv.set_state(
+                self.chain,
+                self.schema,
+                self.oid,
+                event_id,
+                new_state)
 
-                kv.set_state(
-                    self.chain,
-                    self.schema,
-                    self.oid,
-                    event_id,
-                    new_state)
-
-                # FIXME actually support multiple actions
-                kv.append_event(
-                    self.chain, self.schema, self.oid, parent, event_id, [
-                        (action, multiple)], new_state, payload)
-
-            _txn()
+            # FIXME actually support multiple actions
+            kv.append_event(
+                self.chain, self.schema, self.oid, parent, event_id, [
+                    (action, multiple)], new_state, payload)
 
         except Exception as x:
             err = x
