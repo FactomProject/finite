@@ -2,14 +2,19 @@ import unittest
 from finite.storage import new_uuid
 from finite.storage.factom import keyval as kv
 
+CHAIN = 'foo'  # fiendly name for chain
+
+SCHEMA = 'bar'
+
+OID = b'NTk0ZjBhZDctY2U0NS00NzhmLWIyN2ItODhhNDEzMGFjZGYy'
+
+kv.initialize(CHAIN, SCHEMA)
+
 
 class FactomStorageTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.chain = new_uuid()
-        self.oid = new_uuid()
-        self.schema = 'testing_schema'
-        kv.initialize(self.chain, self.schema)
+        pass
 
     def tearDown(self):
         pass
@@ -17,13 +22,14 @@ class FactomStorageTestCase(unittest.TestCase):
     def test_events(self):
         """ test get/set event """
         parent = "__PARENT__"
-        event_id = new_uuid()
+        event_id = b'eTk0ZjBhZDctY2U0NS00NzhmLWIyN2ItODhhNDEzMGFjZGYy'
+
         new_state = [0, 0, 0]
 
         commands = (('foo', 1), ('bar', 2))
-        r = kv.append_event(self.chain,
-                            self.schema,
-                            self.oid,
+        r = kv.append_event(CHAIN,
+                            SCHEMA,
+                            OID,
                             parent,
                             event_id,
                             commands,
@@ -31,28 +37,30 @@ class FactomStorageTestCase(unittest.TestCase):
                             {"hello": "world"})
         self.assertIsNotNone(r)
 
-        e = kv.get_event(self.chain, self.schema, self.oid, event_id)
+        e = kv.get_event(CHAIN, SCHEMA, OID, event_id)
         self.assertIsNotNone(e)
-
         self.assertEqual(e[2], new_state)
+
+        r = kv.find_event(CHAIN, SCHEMA, OID, event_id)
+        self.assertIsNotNone(r)
 
     def test_state(self):
         """ test get/set state """
 
-        r = kv.get_state(self.chain, self.schema, self.oid)
-        self.assertIsNone(kv.get_state(self.chain, self.schema, self.oid))
+        r = kv.get_state(CHAIN, SCHEMA, OID)
+        self.assertIsNone(kv.get_state(CHAIN, SCHEMA, OID))
         event_id = new_uuid()
 
         new_state = [1, 1, 1]
         r = kv.set_state(
-            self.chain,
-            self.schema,
-            self.oid,
+            CHAIN,
+            SCHEMA,
+            OID,
             event_id,
             new_state)
         self.assertTrue(r)
 
-        r = kv.get_state(self.chain, self.schema, self.oid)
+        r = kv.get_state(CHAIN, SCHEMA, OID)
         self.assertIsNotNone(r)
         self.assertEqual(r[0], event_id)
         self.assertEqual(r[1], new_state)

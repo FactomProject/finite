@@ -209,7 +209,8 @@ class StateMachine(object):
     def to_source(self):
         """ generate state machine source code """
 
-        # REVIEW: could we infer source modules via introspection?
+        # REVIEW: could we infer source modules via introspection instead
+        # of explicitly injecting the header?
         out = self.storage_provider.SOURCE_HEADER
         out += "\nfrom finite.state import StateMachine\n\n\n"
         out += "class Machine(StateMachine, Storage):\n\n"
@@ -227,10 +228,10 @@ class StateMachine(object):
                 "            'role': '%s',\n" % attrib['role']
 
             if len(attrib['guards']) > 0:
+                out += "            'guards': {\n" \
+
                 for l, g in attrib['guards'].items():
-                    out += \
-                        "            'guards': {\n" + \
-                        "                '%s': %s,\n" % (l, g)
+                    out += "                '%s': %s,\n" % (l, g)
                 out += "            }\n"
             else:
                 out += "            'guards': {},\n" \

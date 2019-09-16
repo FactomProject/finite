@@ -25,10 +25,15 @@ def initialize(provider, **kwargs):
         EVENTSTORE[es.name] = es.to_module().Machine
 
 
-def eventstore(**kwargs):
+def eventstore(schema=None, chain=None, oid=None):
     """ get statemachine eventstore by schema name """
-    assert 'schema' in kwargs
-    return EVENTSTORE[kwargs['schema']](**kwargs)
+    if schema is None or schema == '':
+        raise Exception("Schema Cannot be Empty")
+
+    if chain is None or chain == '':
+        raise Exception("Chain Cannot be Empty")
+
+    return EVENTSTORE[schema](schema=schema, chain=chain, oid=oid)
 
 
 def schemata():

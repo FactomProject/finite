@@ -21,17 +21,18 @@ class DictStorageTestCase(unittest.TestCase):
         new_state = [0, 0, 0]
 
         commands = (('foo', 1), ('bar', 2))
-        r = kv.append_event(self.chain,
-                            self.schema,
-                            self.oid,
-                            parent,
-                            event_id,
-                            commands,
-                            new_state,
-                            {"hello": "world"})
+        r = kv.append_event(chain=self.chain,
+                            schema=self.schema,
+                            oid=self.oid,
+                            parent=parent,
+                            event_id=event_id,
+                            commands=commands,
+                            new_state=new_state,
+                            payload={"hello": "world"})
         self.assertIsNotNone(r)
 
-        e = kv.get_event(self.chain, self.schema, self.oid, event_id)
+        e = kv.get_event(chain=self.chain, schema=self.schema,
+                         oid=self.oid, event_id=event_id)
         self.assertIsNotNone(e)
 
         self.assertEqual(e[2], new_state)
@@ -39,20 +40,21 @@ class DictStorageTestCase(unittest.TestCase):
     def test_state(self):
         """ test get/set state """
 
-        r = kv.get_state(self.chain, self.schema, self.oid)
-        self.assertIsNone(kv.get_state(self.chain, self.schema, self.oid))
+        r = kv.get_state(chain=self.chain, schema=self.schema, oid=self.oid)
+        self.assertIsNone(kv.get_state(chain=self.chain,
+                                       schema=self.schema, oid=self.oid))
         event_id = new_uuid()
 
         new_state = [1, 1, 1]
         r = kv.set_state(
-            self.chain,
-            self.schema,
-            self.oid,
-            event_id,
-            new_state)
+            chain=self.chain,
+            schema=self.schema,
+            oid=self.oid,
+            head=event_id,
+            new_state=new_state)
         self.assertTrue(r)
 
-        r = kv.get_state(self.chain, self.schema, self.oid)
+        r = kv.get_state(chain=self.chain, schema=self.schema, oid=self.oid)
         self.assertIsNotNone(r)
         self.assertEqual(r[0], event_id)
         self.assertEqual(r[1], new_state)

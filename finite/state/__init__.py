@@ -32,9 +32,13 @@ class StateMachine(object):
 
         raise GuardFail(label)
 
-    def inital_vector(self):
+    def initial_vector(self):
         """ bulid the default state """
         return [p["initial"] for _, p in self.places.items()]
+
+    def capacity_vector(self):
+        """ bulid the default state """
+        return [p["capacity"] for _, p in self.places.items()]
 
     def transform(self, state, action, multiple=1):
         """ perform state transformation with vector addition """

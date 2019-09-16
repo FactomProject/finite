@@ -1,4 +1,5 @@
 import uuid
+import base64
 
 
 class Unimplemented(Exception):
@@ -11,6 +12,10 @@ class RoleFail(Exception):
 
 def new_uuid():
     return str(uuid.uuid4())
+
+
+def encode(x):
+    return base64.b64encode(bytes(x, "utf-8"))
 
 
 SUPERUSER = '*'

@@ -7,8 +7,8 @@ verify_ssl = true
 autopep8 = "*"
 
 [packages]
+factom-api = {editable = true,git = "git://github.com/FactomProject/factom-api.git",ref = "master"}
 python-identitykeys = "*"
-factom-api = "*"
 protobuf = "*"
 grpcio = "*"
 grpcio-tools = "*"

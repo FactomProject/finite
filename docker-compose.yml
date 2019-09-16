@@ -1,20 +1,5 @@
 version: "3.7"
 services:
-  finite:
-    container_name: finite
-    build: .
-    image: factomproject/finite:localdev
-    depends_on:
-      - walletd
-    ports:
-      - "50051:50051"
-    environment:
-      PGUSER: pflow
-      PGPASSWORD: pflow
-      PGDATABASE: pflow
-      PGHOST: pgsql
-    networks:
-      ptnet: {}
   walletd:
     container_name: walletd
     image: factominc/factom-walletd:latest

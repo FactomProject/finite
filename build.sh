@@ -2,7 +2,7 @@ SRC_DIR=./proto
 DST_DIR=./finite
 
 # aggressive auto-reformat
-find . -name '*.py' -exec autopep8 --in-place {} \;
+find . -name '*.py' -exec autopep8 --aggressive --in-place {} \;
 
 # don't reformate generated code
 python -m grpc_tools.protoc -I=$SRC_DIR \

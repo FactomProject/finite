@@ -36,8 +36,9 @@ message Pong {
 
 message Query {
   string schema = 1;
-  string id = 2;
-  string uuid = 3;
+  string chain = 2;
+  string id = 3;
+  string uuid = 4;
 }
 
 message EventList {
@@ -58,8 +59,7 @@ message Command {
   string schema = 2;
   string chain = 3;
   repeated Action action = 4;
-  uint64 multiple = 5;
-  repeated uint64 state = 6;
+  repeated uint64 state = 5;
 }
 
 message State {
@@ -82,7 +82,7 @@ message Event {
   string id = 1;
   string schema = 2;
   string chain = 3;
-  repeated Action action = 4;
+  repeated Action action = 4; 
   google.protobuf.Any payload = 5;
   repeated uint64 state = 6;
   google.protobuf.Timestamp ts = 7;

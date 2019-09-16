@@ -1,15 +1,17 @@
 """ eventstore client """
 from __future__ import print_function
+import os
+import sys
 import logging
 
 import grpc
-
+# KLUDGE: alter path to import proto3 generated python
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # noqa
 import finite.event_pb2 as event_pb2
 import finite.event_pb2_grpc as event_pb2_grpc
 
 
 def TestClient():
-    # FIXME: turn into unit tests
     channel = grpc.insecure_channel('localhost:50051')
     stub = event_pb2_grpc.EventStoreStub(channel)
     return stub

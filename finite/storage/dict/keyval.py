@@ -12,16 +12,21 @@ __STOR = {'_SCHEMA': {_EVENT: None, _STATE: None}}
 # https://docs.scipy.org/doc/numpy/reference/generated/numpy.memmap.html
 
 
-def initialize(chain, schema):
+def initialize(chain=None, schema=None, oid=None):
     global __STOR
-    __STOR[_chainid(chain, schema)] = {_EVENT: {}, _STATE: {}}
+    k = _chainid(chain, schema)
+
+    if k not in __STOR:
+        # NOTE: oid isn't used here
+        # other storage mechanisms may use it for sharding
+        __STOR[k] = {_EVENT: {}, _STATE: {}}
 
 
-def _chainid(chain='', schema=''):
+def _chainid(chain=None, schema=None):
     return schema + "::" + chain
 
 
-def get_state(chain, schema, oid):
+def get_state(chain=None, schema=None, oid=None):
     global __STOR
     d = None
     try:
@@ -31,7 +36,7 @@ def get_state(chain, schema, oid):
     return d
 
 
-def set_state(chain, schema, oid, head, new_state):
+def set_state(chain=None, schema=None, oid=None, head=None, new_state=None):
     """ set new state """
     global __STOR
     stored = False
@@ -43,15 +48,8 @@ def set_state(chain, schema, oid, head, new_state):
     return stored
 
 
-def append_event(
-        chain,
-        schema,
-        oid,
-        parent,
-        event_id,
-        commands,
-        new_state,
-        payload):
+def append_event(chain=None, schema=None, oid=None, parent=None,
+                 event_id=None, commands=None, new_state=None, payload=None):
     """ store new event """
 
     global __STOR
@@ -70,7 +68,7 @@ def append_event(
     return stored
 
 
-def get_event(chain, schema, oid, event_id):
+def get_event(chain=None, schema=None, oid=None, event_id=None):
     """ retrieve previous event """
 
     global __STOR

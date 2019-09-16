@@ -28,12 +28,20 @@ class Storage(object):
     def migrate():
         """ create evenstore tables if missing """
 
-    def __init__(self, **kwargs):
-        """ set object uuid for storage instance """
-        self.schema = kwargs['schema']
-        self.oid = new_uuid()
-        self.chain = new_uuid()  # FIXME should create a proper chain ID
-        kv.initialize(self.chain, self.schema)
+    def __init__(self, schema=None, chain=None, oid=None):
+        """
+        set identifiers for storage instance
+
+        NOTE: OID set to None if the intention
+        is to inspect the state machine attributes
+        """
+
+        self.schema = schema
+        self.chain = chain
+
+        if oid is not None:
+            self.oid = oid
+            kv.initialize(schema=self.schema, chain=self.chain, oid=self.oid)
 
     def __call__(self, action, **kwargs):
         """ append a new event """
@@ -64,7 +72,7 @@ class Storage(object):
 
             if not previous:
                 parent = stor.ROOT_UUID
-                current_state = self.inital_vector()
+                current_state = self.initial_vector()
             else:
                 parent = previous[0]
                 current_state = previous[1]
@@ -94,9 +102,12 @@ class Storage(object):
 
     def events(self):
         """ list all events """
+        # TODO: implement this query
 
     def event(self, uuid):
         """ get a single event """
+        return kv.get_event(self.chain, self.schema, self.oid, uuid)
 
     def state(self):
         """ get state """
+        return kv.get_state(self.chain, self.schema, self.oid)
