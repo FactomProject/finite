@@ -12,7 +12,7 @@ _STATE = "_STATE"
 
 _EVENT = "_EVENT"
 
-_CHAINID = '8aea9badb6ba2da807ed1dffff61f36db836e2cbb467558dd8b214ce6088e8e9'
+_CHAINID = '9fd62d9b1f00228c30134a7bae86dfcc48599ee2234a1015d5d200a5ab17187d'
 
 
 def initialize(chain, schema):
@@ -50,18 +50,50 @@ class Blockchain(object):
     STOR = {}
 
     def __init__(self, chain, schema):
-        self.STOR[_chainid(chain, schema)] = {_EVENT: {}, _STATE: {}}
+        self.chainhead = None
+        self.chainid = None
+        self.schema = schema
+        self.chain = chain
+
+        self.chainid = _chainid(chain, schema)
+        self.STOR[self.chainid] = {_EVENT: {}, _STATE: {}}
+
         try:
-            # TODO: use hash of state machine as chain_content
-            r = walletd.new_chain(factomd, [b'finite', _b(
-                schema)], b'chain_content', ec_address=factomd.ec_address)
-            print(r)
+            r = factomd.entry_credit_rate()
+            print("rate:", r)
+            rate = r['rate']
+
+            # TODO: refactor to periodically check/buy ECs
+            r = walletd.fct_to_ec(factomd, 50 * rate, fct_address=factomd.fct_address,
+                            ec_address=factomd.ec_address)
+            print("buyec:", r)
+
+            # assert our chain exists
+            r = factomd.chain_head(_CHAINID)
+            print("chain_head:", r)
+
+            if 'chainhead' in r:
+                self.chainhead = r['chain_head']
+
         except Exception as x:
+            print(x)
             pass
 
-        # assert our chain exists
-        r = factomd.chain_head(_CHAINID)
-        assert 'chainhead' in r
+    def create_chain(self):
+        try:
+            if not self.chainhead:
+                # TODO: use hash of state machine as chain_content
+                r = walletd.new_chain(factomd, [b'finite', _b(self.schema)], b'chain_content', ec_address=factomd.ec_address)
+
+                if 'chainid' in r:
+                    self.chainid = r['chainid']
+
+                print("newchain:", r)
+
+        except Exception as x:
+            print("newchain:", x)
+
+        return self.chainhead
 
     def __getitem__(self, key):
         return self.STOR[key]
@@ -127,8 +159,16 @@ class Blockchain(object):
         r = factomd.read_chain(_chainid(chain, schema))
         #import IPython ; IPython.embed()
         print("\nFIND:", chain, schema, oid, event_id)
-        print(r)
-        return[0]  # KLUDGE: just return the last one
+
+        # FIXME: return the only match
+        while True:
+            try:
+                s = next(r)
+            except StopIteration:
+                break
+            print(s)
+
+        return s
 
 
 def get_state(chain, schema, oid):

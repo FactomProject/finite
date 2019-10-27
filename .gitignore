@@ -108,3 +108,4 @@ cockroach-data
 postgres-data
 .factom
 .vscode
+out.txt

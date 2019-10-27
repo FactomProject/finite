@@ -1,23 +1,52 @@
+import time
 import unittest
 from finite.storage import new_uuid
 from finite.storage.factom import keyval as kv
+from factom_sim import Factomd, FactomWalletd
 
 CHAIN = 'foo'  # fiendly name for chain
-
 SCHEMA = 'bar'
-
 OID = b'NTk0ZjBhZDctY2U0NS00NzhmLWIyN2ItODhhNDEzMGFjZGYy'
 
-kv.initialize(CHAIN, SCHEMA)
+# toggle to run tests against external services
 
 
-class FactomStorageTestCase(unittest.TestCase):
+class TestFactomStorage(unittest.TestCase):
+    fnode = Factomd()
+    wallet = FactomWalletd()
+    stor = None # datastore
+    EXTERNAL=False
+
+    @classmethod
+    def setUpClass(cls):
+        if not cls.EXTERNAL:
+            cls.fnode.start()
+            cls.wallet.start()
+            time.sleep(15)
+
+        cls.stor = kv.initialize(CHAIN, SCHEMA)
+
+        if cls.stor.chainhead is None:
+            time.sleep(2)
+            cls.stor.create_chain()
+
+        time.sleep(5)
+
+    @classmethod
+    def tearDownClass(cls):
+        if not cls.EXTERNAL:
+            cls.fnode.join()
+            cls.wallet.join()
 
     def setUp(self):
         pass
 
     def tearDown(self):
         pass
+
+    def test_chain(self):
+        #self.assertIsNotNone(self.stor.chainid)
+        self.assertIsNotNone(None)
 
     def test_events(self):
         """ test get/set event """

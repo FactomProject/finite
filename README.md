@@ -8,6 +8,15 @@ Early POC
 
 ## Development
 
+Start factomd sim + wallet
+```
+./sim.py
+```
+
+Buy some EC's 
+```
+./test.sh buyec
+```
 
 ### Docker-Compose tips
 

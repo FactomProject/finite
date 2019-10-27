@@ -15,7 +15,7 @@ def new_uuid():
 
 
 def encode(x):
-    return base64.b64encode(bytes(x, "utf-8"))
+    return x.encode()
 
 
 SUPERUSER = '*'
