@@ -72,6 +72,7 @@ class Blockchain(object):
             r = factomd.chain_head(_CHAINID)
             print("chain_head:", r)
 
+            # TODO: record chain ID
             if 'chainhead' in r:
                 self.chainhead = r['chain_head']
 

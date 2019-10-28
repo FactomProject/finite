@@ -7,22 +7,24 @@ from factom_sim import Factomd, FactomWalletd
 CHAIN = 'foo'  # fiendly name for chain
 SCHEMA = 'bar'
 OID = b'NTk0ZjBhZDctY2U0NS00NzhmLWIyN2ItODhhNDEzMGFjZGYy'
-
+BLKTIME=15 #sec
 # toggle to run tests against external services
 
+def wait_blocks(i):
+    time.sleep(i*BLKTIME)
 
 class TestFactomStorage(unittest.TestCase):
     fnode = Factomd()
     wallet = FactomWalletd()
     stor = None # datastore
-    EXTERNAL=False
+    EXTERNAL=False # test using an external factomd/factom-walletd
 
     @classmethod
     def setUpClass(cls):
         if not cls.EXTERNAL:
             cls.fnode.start()
             cls.wallet.start()
-            time.sleep(15)
+            wait_blocks(1)
 
         cls.stor = kv.initialize(CHAIN, SCHEMA)
 
@@ -65,6 +67,8 @@ class TestFactomStorage(unittest.TestCase):
                             new_state,
                             {"hello": "world"})
         self.assertIsNotNone(r)
+
+        wait_blocks(1)
 
         e = kv.get_event(CHAIN, SCHEMA, OID, event_id)
         self.assertIsNotNone(e)
