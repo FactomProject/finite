@@ -10,35 +10,34 @@ OID = b'NTk0ZjBhZDctY2U0NS00NzhmLWIyN2ItODhhNDEzMGFjZGYy'
 BLKTIME=15 #sec
 # toggle to run tests against external services
 
+fnode = Factomd()
+wallet = FactomWalletd()
+stor = None # datastore
+EXTERNAL=False # test using an external factomd/factom-walletd
+
+def setUpModule():
+    if not EXTERNAL:
+        fnode.start()
+        wallet.start()
+        wait_blocks(1)
+
+    stor = kv.initialize(CHAIN, SCHEMA)
+
+    if stor.chainhead is None:
+        time.sleep(2)
+        stor.create_chain()
+
+    time.sleep(5)
+
+def tearDownModule():
+    if not EXTERNAL:
+        fnode.join()
+        wallet.join()
+
 def wait_blocks(i):
     time.sleep(i*BLKTIME)
 
 class TestFactomStorage(unittest.TestCase):
-    fnode = Factomd()
-    wallet = FactomWalletd()
-    stor = None # datastore
-    EXTERNAL=False # test using an external factomd/factom-walletd
-
-    @classmethod
-    def setUpClass(cls):
-        if not cls.EXTERNAL:
-            cls.fnode.start()
-            cls.wallet.start()
-            wait_blocks(1)
-
-        cls.stor = kv.initialize(CHAIN, SCHEMA)
-
-        if cls.stor.chainhead is None:
-            time.sleep(2)
-            cls.stor.create_chain()
-
-        time.sleep(5)
-
-    @classmethod
-    def tearDownClass(cls):
-        if not cls.EXTERNAL:
-            cls.fnode.join()
-            cls.wallet.join()
 
     def setUp(self):
         pass
