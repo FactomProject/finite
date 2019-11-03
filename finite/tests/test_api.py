@@ -54,12 +54,20 @@ class TestCase(unittest.TestCase):
         res_uuid = response.state.head
 
         # TODO: query with & without uuid
-        query = event_pb2.Query(schema="octoe", chain="foo", id="bar", uuid=res_uuid)
+        query = event_pb2.Query(
+            schema="octoe",
+            chain="foo",
+            id="bar",
+            uuid=res_uuid)
         response = stub.GetEvent(query)
         print("GetEvent: %s" % response.list[0].uuid)
 
         # TODO: query with & without uuid
-        query = event_pb2.Query(schema="octoe", chain="foo", id="bar", uuid=None)
+        query = event_pb2.Query(
+            schema="octoe",
+            chain="foo",
+            id="bar",
+            uuid=None)
         response = stub.GetState(query)
         print("GetState: %s" % response.list[0].state)
 

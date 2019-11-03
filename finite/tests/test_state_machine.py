@@ -7,7 +7,10 @@ class OctoeTestCase(unittest.TestCase):
 
     def setUp(self):
         finite.initialize(Storage)
-        self.m = finite.eventstore(schema='octoe', chain='mychain', oid="test_oid")
+        self.m = finite.eventstore(
+            schema='octoe',
+            chain='mychain',
+            oid="test_oid")
 
     def tearDown(self):
         self.m.drop()

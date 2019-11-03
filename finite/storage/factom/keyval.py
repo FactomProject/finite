@@ -14,6 +14,7 @@ _EVENT = "_EVENT"
 
 _CHAINID = '9fd62d9b1f00228c30134a7bae86dfcc48599ee2234a1015d5d200a5ab17187d'
 
+WAIT_TIME = 15
 
 def initialize(chain, schema):
     global __DB
@@ -57,17 +58,10 @@ class Blockchain(object):
 
         self.chainid = _chainid(chain, schema)
         self.STOR[self.chainid] = {_EVENT: {}, _STATE: {}}
+        self.buy_ec()
 
+    def find_chain(self):
         try:
-            r = factomd.entry_credit_rate()
-            print("rate:", r)
-            rate = r['rate']
-
-            # TODO: refactor to periodically check/buy ECs
-            r = walletd.fct_to_ec(factomd, 50 * rate, fct_address=factomd.fct_address,
-                            ec_address=factomd.ec_address)
-            print("buyec:", r)
-
             # assert our chain exists
             r = factomd.chain_head(_CHAINID)
             print("chain_head:", r)
@@ -76,25 +70,71 @@ class Blockchain(object):
             if 'chainhead' in r:
                 self.chainhead = r['chain_head']
 
+            return self.chainhead
+        except Exception as x:
+            return None
+
+    def buy_ec(self):
+        try:
+            r = factomd.entry_credit_rate()
+            print("rate:", r)
+            self.rate = r['rate']
+
+            # TODO: refactor to periodically check/buy ECs
+            r = walletd.fct_to_ec(
+                factomd,
+                500 * self.rate,
+                fct_address=factomd.fct_address,
+                ec_address=factomd.ec_address)
+            print("buyec:", r)
+            return True
+        except Exception as x:
+            return None
+
+    def find_chain(self):
+        """ wait for chain head to be committed """
+        try:
+            r = factomd.chain_head(_CHAINID)
+            print("chain_head:", r)
+
+            if 'chainhead' in r:
+                self.chainhead = r['chainhead']
+
+                return True
         except Exception as x:
             print(x)
-            pass
+
+        return False
+
+    def wait_for_chain(self):
+        """
+        create chain if it doesn't exist
+        wait until chainhead is found by the API
+        """
+        if not self.find_chain():
+            time.sleep(WAIT_TIME)
+            while not self.create_chain():
+                time.sleep(WAIT_TIME)
+
+            while not self.find_chain():
+                time.sleep(WAIT_TIME)
 
     def create_chain(self):
         try:
-            if not self.chainhead:
-                # TODO: use hash of state machine as chain_content
-                r = walletd.new_chain(factomd, [b'finite', _b(self.schema)], b'chain_content', ec_address=factomd.ec_address)
+            # TODO: use hash of state machine as chain_content
+            r = walletd.new_chain(
+                factomd,
+                [ b'finite', _b( self.schema)],
+                b'chain_content', ec_address=factomd.ec_address)
 
-                if 'chainid' in r:
-                    self.chainid = r['chainid']
-
-                print("newchain:", r)
-
+            assert 'chainid' in r
+            self.chainid = r['chainid']
+            print("newchain:", r)
+            return True
         except Exception as x:
-            print("newchain:", x)
-
-        return self.chainhead
+            print("newchain FAIL:", x)
+            return None
+    
 
     def __getitem__(self, key):
         return self.STOR[key]
@@ -158,7 +198,6 @@ class Blockchain(object):
 
     def find_event(self, chain, schema, oid, event_id):
         r = factomd.read_chain(_chainid(chain, schema))
-        #import IPython ; IPython.embed()
         print("\nFIND:", chain, schema, oid, event_id)
 
         # FIXME: return the only match

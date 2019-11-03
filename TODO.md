@@ -10,7 +10,7 @@ BACKLOG
 -------
 - [ ] fix issue where exit code isn't set properly when running python -m unittest finite/tests/test_fct_store.py 
       ^ due to the '-m' flag passing on cli
-- [ ] make it possible for embeddded libs to set params
+- [ ] make it possible for embedded libs to set params
 - [ ] tweak chain initialization chainid/chainhead to be more consistent
 - [ ] support compound actions as in ptnet-eventstore repo
 - [ ] add a method at boot

@@ -7,35 +7,30 @@ from factom_sim import Factomd, FactomWalletd
 CHAIN = 'foo'  # fiendly name for chain
 SCHEMA = 'bar'
 OID = b'NTk0ZjBhZDctY2U0NS00NzhmLWIyN2ItODhhNDEzMGFjZGYy'
-BLKTIME=15 #sec
+BLKTIME = 15  # sec
 # toggle to run tests against external services
 
 fnode = Factomd()
 wallet = FactomWalletd()
-stor = None # datastore
-EXTERNAL=False # test using an external factomd/factom-walletd
+stor = None  # datastore
+
 
 def setUpModule():
-    if not EXTERNAL:
-        fnode.start()
-        wallet.start()
-        wait_blocks(1)
-
+    fnode.start()
+    wallet.start()
+    wait_blocks(2)
     stor = kv.initialize(CHAIN, SCHEMA)
+    stor.wait_for_chain()
 
-    if stor.chainhead is None:
-        time.sleep(2)
-        stor.create_chain()
-
-    time.sleep(5)
 
 def tearDownModule():
-    if not EXTERNAL:
-        fnode.join()
-        wallet.join()
+    fnode.join()
+    wallet.join()
+
 
 def wait_blocks(i):
-    time.sleep(i*BLKTIME)
+    time.sleep(i * BLKTIME)
+
 
 class TestFactomStorage(unittest.TestCase):
 
@@ -45,12 +40,9 @@ class TestFactomStorage(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_chain(self):
-        #self.assertIsNotNone(self.stor.chainid)
-        self.assertIsNotNone(None)
-
     def test_events(self):
         """ test get/set event """
+        wait_blocks(2)
         parent = "__PARENT__"
         event_id = b'eTk0ZjBhZDctY2U0NS00NzhmLWIyN2ItODhhNDEzMGFjZGYy'
 
@@ -74,6 +66,7 @@ class TestFactomStorage(unittest.TestCase):
         self.assertEqual(e[2], new_state)
 
         r = kv.find_event(CHAIN, SCHEMA, OID, event_id)
+        # FIXME: assert we found the proper event
         self.assertIsNotNone(r)
 
     def test_state(self):

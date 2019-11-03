@@ -109,3 +109,4 @@ postgres-data
 .factom
 .vscode
 out.txt
+*.code-workspace

@@ -1,12 +1,33 @@
-
+import time
 import unittest
-
-from finite.storage import new_uuid, encode
+from finite.storage import new_uuid
 from finite.storage.factom import keyval as kv
+from factom_sim import Factomd, FactomWalletd
 
 
 # TODO: precompute chainid rather than just creating every time
-chain0 = "8ccb2446cfaa7915863cf5b3fad79653dfd92ce896f424c3bd635e0c88f20503"
+CHAIN = "8ccb2446cfaa7915863cf5b3fad79653dfd92ce896f424c3bd635e0c88f20503"
+SCHEMA = 'bar'
+
+BLKTIME = 15  # sec
+
+def wait_blocks(i):
+    time.sleep(i * BLKTIME)
+
+fnode = Factomd()
+wallet = FactomWalletd()
+
+def setUpModule():
+    fnode.start()
+    wallet.start()
+    wait_blocks(2)
+    stor = kv.initialize(CHAIN, SCHEMA)
+    stor.wait_for_chain()
+
+
+def tearDownModule():
+    fnode.join()
+    wallet.join()
 
 
 # NOTE: currently this test is somewhat inconsistent
@@ -14,8 +35,7 @@ chain0 = "8ccb2446cfaa7915863cf5b3fad79653dfd92ce896f424c3bd635e0c88f20503"
 class FactomStorageTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.schema = 'testing_schema'
-        self.stor = kv.initialize(chain0, self.schema)
+        pass
 
     def tearDown(self):
         pass
@@ -54,26 +74,23 @@ class FactomStorageTestCase(unittest.TestCase):
             r = w.new_chain(f, [b'random', b'chain', b'id', key],
                             b'chain_content', ec_address=f.ec_address)
 
-            self.assertEqual(chain0, r['chainid'])
+            self.assertEqual(CHAIN, r['chainid'])
             entry0 = r['entryhash']
-            print({"chain": chain0, "entryhash": entry0})
+            print({"chain": CHAIN, "entryhash": entry0})
             sleep(2)
         except Exception as x:
-            r = f.chain_head(chain0)
+            r = f.chain_head(CHAIN)
 
         print(r)
 
         key = b'NTk0ZjBhZDctY2U0NS00NzhmLWIyN2ItODhhNDEzMGFjZGYy'
-        r = w.new_entry(f, chain0, [b'random', b'entry', key],
+        r = w.new_entry(f, CHAIN, [b'random', b'entry', key],
                         b'entry_content', ec_address=f.ec_address)
 
-        r = f.read_chain(chain0)
-        print("\nCHAIN: %s\n" % chain0)
+        r = f.read_chain(CHAIN)
+        print("\nCHAIN: %s\n" % CHAIN)
         for e in r:
             print(e)
-
-        # print(r)
-        #import IPython ; IPython.embed()
 
 
 if __name__ == '__main__':

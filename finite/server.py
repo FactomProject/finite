@@ -125,7 +125,7 @@ class EventStore(event_pb2_grpc.EventStoreServicer):
                 id=request.id,
                 schema=request.schema,
                 chain=request.chain,
-                action=None, # FIXME: add actions
+                action=None,  # FIXME: add actions
                 payload=None,
                 state=e[2],
                 ts=None,

@@ -225,7 +225,7 @@
         "factom-sim": {
             "editable": true,
             "git": "git://github.com/stackdump/factom-sim.git",
-            "ref": "9ea73e6be7b66f93be89eb6e0259bded0793033c"
+            "ref": "dee9cc8848a5b8e8439a41617a57373e10bc02ea"
         },
         "pycodestyle": {
             "hashes": [
